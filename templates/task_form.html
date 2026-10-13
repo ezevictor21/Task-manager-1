@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit Task' if task else 'New Task' }} | Task Manager{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto bg-white rounded-lg shadow p-6">
+    <h1 class="text-2xl font-bold mb-6">{{ 'Edit Task' if task else 'Create a New Task' }}</h1>
+
+    <form method="post" class="space-y-4" novalidate>
+        <div>
+            <label for="title" class="block text-sm font-medium mb-1">Title <span class="text-red-600">*</span></label>
+            <input id="title" type="text" name="title" required maxlength="100"
+                   value="{{ form.title or '' }}"
+                   class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <p class="text-xs text-gray-500 mt-1">Max 100 characters.</p>
+        </div>
+
+        <div>
+            <label for="description" class="block text-sm font-medium mb-1">Description</label>
+            <textarea id="description" name="description" rows="4" maxlength="500"
+                      class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">{{ form.description or '' }}</textarea>
+            <p class="text-xs text-gray-500 mt-1">Optional. Max 500 characters.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+                <label for="due_date" class="block text-sm font-medium mb-1">Due date <span class="text-red-600">*</span></label>
+                <input id="due_date" type="date" name="due_date" required
+                       value="{{ form.due_date_raw or '' }}"
+                       class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+            <div>
+                <label for="status" class="block text-sm font-medium mb-1">Status <span class="text-red-600">*</span></label>
+                <select id="status" name="status" required class="w-full border rounded px-3 py-2">
+                    {% for s in STATUSES %}
+                    <option value="{{ s }}" {% if (form.status or STATUSES[0]) == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="priority" class="block text-sm font-medium mb-1">Priority</label>
+                <select id="priority" name="priority" class="w-full border rounded px-3 py-2">
+                    {% for p in PRIORITIES %}
+                    <option value="{{ p }}" {% if (form.priority or 'Medium') == p %}selected{% endif %}>{{ p }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded">
+                {{ 'Save changes' if task else 'Create task' }}
+            </button>
+            <a href="{{ url_for('dashboard') }}" class="px-5 py-2 rounded border border-gray-300 hover:bg-gray-100">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

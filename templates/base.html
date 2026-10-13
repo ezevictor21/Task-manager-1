@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Task Manager{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col text-gray-800">
+
+    <!-- Navigation bar -->
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex items-center justify-between h-16">
+                <a href="{{ url_for('index') }}" class="flex items-center gap-2 text-xl font-bold">
+                    <img src="{{ url_for('static', filename='images/task-manager-logo.svg') }}" alt="" class="h-8 w-8">
+                    Task Manager
+                </a>
+
+                <!-- Mobile menu button -->
+                <button id="nav-toggle" class="sm:hidden p-2 rounded hover:bg-blue-700" aria-label="Toggle menu">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                    </svg>
+                </button>
+
+                <div id="nav-links" class="hidden sm:flex items-center gap-4">
+                    <a href="{{ url_for('index') }}" class="hover:text-blue-200">Home</a>
+                    {% if session.get('user_id') %}
+                        <a href="{{ url_for('dashboard') }}" class="hover:text-blue-200">Dashboard</a>
+                        <a href="{{ url_for('create_task') }}" class="hover:text-blue-200">New Task</a>
+                        <span class="text-blue-200 text-sm">Hi, {{ session.get('username') }}</span>
+                        <a href="{{ url_for('logout') }}" class="bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login') }}" class="hover:text-blue-200">Login</a>
+                        <a href="{{ url_for('register') }}" class="bg-blue-800 hover:bg-blue-900 px-3 py-1.5 rounded">Register</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Mobile links -->
+            <div id="nav-mobile" class="hidden sm:hidden pb-3 flex flex-col gap-2">
+                <a href="{{ url_for('index') }}" class="py-1">Home</a>
+                {% if session.get('user_id') %}
+                    <a href="{{ url_for('dashboard') }}" class="py-1">Dashboard</a>
+                    <a href="{{ url_for('create_task') }}" class="py-1">New Task</a>
+                    <a href="{{ url_for('logout') }}" class="py-1">Logout ({{ session.get('username') }})</a>
+                {% else %}
+                    <a href="{{ url_for('login') }}" class="py-1">Login</a>
+                    <a href="{{ url_for('register') }}" class="py-1">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    <main class="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="space-y-2 mb-6">
+                {% for category, message in messages %}
+                    {% set styles = {
+                        'success': 'bg-green-100 border-green-400 text-green-800',
+                        'danger':  'bg-red-100 border-red-400 text-red-800',
+                        'warning': 'bg-yellow-100 border-yellow-400 text-yellow-800',
+                        'info':    'bg-blue-100 border-blue-400 text-blue-800'
+                    } %}
+                    <div class="border-l-4 px-4 py-3 rounded {{ styles.get(category, styles['info']) }}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="text-center text-sm text-gray-500 py-4">
+        Task Manager &middot; Python Final Portfolio Project
+    </footer>
+
+    <script>
+        document.getElementById('nav-toggle').addEventListener('click', function () {
+            document.getElementById('nav-mobile').classList.toggle('hidden');
+        });
+    </script>
+</body>
+</html>

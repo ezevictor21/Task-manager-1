@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Home | Task Manager{% endblock %}
+{% block content %}
+<section class="text-center py-16">
+    <h1 class="text-4xl sm:text-5xl font-bold text-gray-900 mb-4">Stay on top of your tasks</h1>
+    <p class="text-lg text-gray-600 max-w-2xl mx-auto mb-8">
+        Create tasks, set due dates and priorities, filter by status and track your progress
+        from any device.
+    </p>
+    {% if session.get('user_id') %}
+        <a href="{{ url_for('dashboard') }}" class="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg">
+            Go to my dashboard
+        </a>
+    {% else %}
+        <div class="flex flex-col sm:flex-row justify-center gap-3">
+            <a href="{{ url_for('register') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg">Create an account</a>
+            <a href="{{ url_for('login') }}" class="bg-white border border-gray-300 hover:bg-gray-100 font-semibold px-6 py-3 rounded-lg">Log in</a>
+        </div>
+    {% endif %}
+</section>
+
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="font-semibold text-lg mb-2">Organise</h2>
+        <p class="text-gray-600">Give every task a title, description, due date, status and priority.</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="font-semibold text-lg mb-2">Find</h2>
+        <p class="text-gray-600">Filter by status or priority, search by keyword and sort any column.</p>
+    </div>
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="font-semibold text-lg mb-2">Export</h2>
+        <p class="text-gray-600">Download your task list as CSV or read it through the JSON API.</p>
+    </div>
+</section>
+{% endblock %}
